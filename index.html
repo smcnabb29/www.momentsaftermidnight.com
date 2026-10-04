@@ -177,6 +177,120 @@ h3{font-family:var(--display);font-weight:400;font-size:2rem;line-height:1.1;mar
 @media (max-width:600px){.tier summary{grid-template-columns:auto 1fr auto auto;gap:.7rem;padding:1.1rem}.tier .glyph{width:36px;height:36px}.tier-body{padding:0 1.1rem 1.4rem}}
 
 
+
+/* ---------- MC reveal scroll ---------- */
+.mc{padding:5rem 1rem}
+.mc-stage{max-width:56rem;margin:0 auto;display:grid;grid-template-columns:auto minmax(0,34rem) auto;justify-content:center;align-items:end;gap:clamp(.5rem,4vw,3rem)}
+.mc-head{text-align:center;margin:0 auto 2.5rem;max-width:40rem}
+.mc-head h2{margin-bottom:.5rem}
+.candle{position:relative;width:clamp(34px,7vw,58px);display:flex;flex-direction:column;align-items:center;align-self:start;margin-top:1.5rem}
+.candle .glow{position:absolute;top:-70px;left:50%;width:220px;height:220px;margin-left:-110px;border-radius:50%;background:radial-gradient(circle,rgba(255,170,60,.28),rgba(227,16,46,.08) 45%,transparent 70%);animation:glow 3s ease-in-out infinite alternate;pointer-events:none}
+.candle .flame{width:42%;aspect-ratio:1/2.1;border-radius:50% 50% 50% 50% / 62% 62% 38% 38%;background:radial-gradient(ellipse at 50% 78%,#fff6d8 0 18%,#ffcf5a 34%,#ff7a1a 62%,rgba(227,16,46,0) 78%);transform-origin:50% 90%;animation:flicker 1.7s ease-in-out infinite;filter:blur(.3px)}
+.candle.r .flame{animation-delay:-.8s}
+.candle .wick{width:2px;height:8px;background:#1a0a04}
+.candle .wax{width:100%;height:clamp(150px,30vw,250px);background:linear-gradient(90deg,#b9a68f,#efe3d1 35%,#f6ecdc 50%,#d6c4ad 80%,#a8937a);border-radius:4px 4px 2px 2px;position:relative}
+.candle.tall .wax{height:clamp(190px,38vw,310px)}
+.candle .wax::before{content:"";position:absolute;top:-2px;left:12%;width:22%;height:34%;background:#f3e8d8;border-radius:0 0 50% 50%}
+.candle .wax::after{content:"";position:absolute;top:-2px;right:18%;width:16%;height:20%;background:#efe2cf;border-radius:0 0 50% 50%}
+.candle .holder{width:170%;height:14px;background:linear-gradient(180deg,#3a0008,#120002);border:1px solid var(--blood);border-radius:50%}
+.candle .base{width:70%;height:22px;background:linear-gradient(90deg,#1a0004,#4a0009,#1a0004);clip-path:polygon(20% 0,80% 0,100% 100%,0 100%)}
+@keyframes flicker{0%,100%{transform:scale(1,1) rotate(-1deg)}25%{transform:scale(.94,1.06) rotate(2deg)}50%{transform:scale(1.04,.95) rotate(-2deg)}75%{transform:scale(.97,1.04) rotate(1deg)}}
+@keyframes glow{from{opacity:.75;transform:scale(.95)}to{opacity:1;transform:scale(1.05)}}
+
+.scroll{display:flex;flex-direction:column;align-items:center}
+.rod{position:relative;width:100%;height:26px;border-radius:13px;background:linear-gradient(180deg,#5a2a12,#2a1006 55%,#140703);box-shadow:0 6px 14px rgba(0,0,0,.7);z-index:2}
+.rod::before,.rod::after{content:"";position:absolute;top:-5px;width:22px;height:36px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#c4001c,#5a000a 70%)}
+.rod::before{left:-14px}.rod::after{right:-14px}
+.parchment{width:94%;overflow:hidden;max-height:0;transition:max-height 1.6s cubic-bezier(.45,0,.2,1);
+  background:
+    radial-gradient(ellipse at 15% 20%,rgba(120,70,20,.25),transparent 40%),
+    radial-gradient(ellipse at 85% 75%,rgba(120,60,20,.3),transparent 45%),
+    radial-gradient(ellipse at 60% 40%,rgba(255,240,210,.5),transparent 60%),
+    linear-gradient(90deg,#c9a878,#ead6b0 12%,#f1e2c2 50%,#e6cfa4 88%,#bf9b68);
+  box-shadow:inset 0 10px 18px rgba(60,30,5,.45),inset 0 -10px 18px rgba(60,30,5,.45);color:#2a0a04}
+.scroll.open .parchment{max-height:44rem}
+.parchment-inner{padding:2.25rem clamp(1.25rem,5vw,2.75rem) 2.5rem;text-align:center}
+.parchment .decree{font-style:italic;letter-spacing:.12em;text-transform:uppercase;font-size:.9rem;color:#6b2a14;margin:0 0 .5rem}
+.parchment h3{font-size:clamp(1.9rem,6vw,2.6rem);color:#7a000e;margin:0 0 1.25rem}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin:0 0 1.5rem}
+.role-card{border-top:1px solid rgba(122,0,14,.5);border-bottom:1px solid rgba(122,0,14,.5);padding:1rem .5rem}
+.role-card .title{font-family:var(--display);font-size:1.5rem;color:#2a0a04;margin:0;line-height:1.1;text-shadow:none}
+.role-card .who-name{font-family:var(--display);font-size:clamp(1.6rem,5vw,2.1rem);color:#7a000e;margin:.5rem 0 0;filter:blur(5px);user-select:none}
+.role-card .soon{font-style:italic;font-size:.95rem;color:#6b2a14;margin:.25rem 0 0}
+.parchment .sign{font-style:italic;margin:0}
+@media (max-width:520px){.roles{grid-template-columns:1fr}}
+.seal-btn{margin-top:-14px;position:relative;z-index:3;width:92px;height:92px;border:0;border-radius:50%;cursor:pointer;
+  background:radial-gradient(circle at 40% 35%,#d4001a,#8a0010 55%,#4a0009);color:#f3dcc0;font-family:var(--display);font-size:1rem;line-height:1.05;
+  box-shadow:0 6px 16px rgba(0,0,0,.7),inset 0 0 0 5px rgba(0,0,0,.18),inset 0 0 0 8px rgba(255,255,255,.06);transition:transform .25s}
+.seal-btn:hover{transform:scale(1.06) rotate(-4deg)}
+.mc-hint{text-align:center;font-style:italic;color:var(--ash);margin-top:1rem}
+
+/* ---------- Spotlights ---------- */
+.spot{position:relative;overflow:hidden;background:rgba(0,0,0,.7)}
+.spot::before{content:"";position:absolute;top:-10%;left:50%;width:70rem;height:120%;margin-left:-35rem;background:conic-gradient(from 160deg at 50% 0%,transparent 0deg,rgba(236,220,200,.10) 20deg,rgba(236,220,200,.02) 40deg,transparent 60deg);pointer-events:none}
+.spot .wrap{position:relative}
+.spot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:1.25rem;margin-top:2.5rem}
+.spot-card{border:1px solid var(--line);background:rgba(10,0,2,.85);padding:1.5rem}
+.spot-card svg{width:40px;height:40px;margin-bottom:.75rem}
+.spot-card h3{font-size:1.7rem;color:var(--bone)}
+.spot-card p{margin:0;color:var(--ash)}
+.spot-feature{margin-top:2rem;border-left:3px solid var(--fresh);padding:1rem 1.5rem;background:linear-gradient(90deg,rgba(138,0,16,.35),transparent);font-size:1.3rem}
+
+/* ---------- Panels ---------- */
+.panels-sec{background:linear-gradient(180deg,transparent,rgba(20,0,4,.88) 15%,rgba(20,0,4,.88) 85%,transparent)}
+.panels-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:3rem;align-items:start}
+@media (max-width:760px){.panels-layout{grid-template-columns:1fr}}
+.live{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--fresh);color:var(--bone);padding:.25rem .8rem;font-size:.95rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
+.live i{width:10px;height:10px;border-radius:50%;background:var(--fresh);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(227,16,46,.7)}50%{opacity:.6;box-shadow:0 0 0 7px rgba(227,16,46,0)}}
+.panel-days{list-style:none;margin:0;padding:0;border:1px solid var(--line);background:rgba(0,0,0,.6)}
+.panel-days li{padding:1.25rem 1.5rem;border-bottom:1px dashed rgba(196,0,28,.35)}
+.panel-days li:last-child{border-bottom:0}
+.panel-days b{display:block;font-family:var(--display);font-weight:400;font-size:1.8rem;color:var(--fresh);line-height:1.1}
+.panel-days span{font-style:italic;color:var(--ash)}
+
+
+/* ---------- Anthology form ---------- */
+.deadline{display:inline-block;border:1px solid var(--fresh);padding:.4rem 1rem;margin:.25rem 0 1rem;color:var(--bone)}
+.deadline b{font-family:var(--display);font-weight:400;font-size:1.4rem;color:var(--fresh)}
+.sub-form{margin-top:3rem;border:1px solid var(--line);background:rgba(0,0,0,.78);padding:clamp(1.25rem,4vw,2.25rem)}
+.sub-form h3{color:var(--bone)}
+.sub-form .grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem 1.25rem;margin-top:1.25rem}
+.sub-form .full{grid-column:1/-1}
+@media (max-width:620px){.sub-form .grid{grid-template-columns:1fr}}
+.field label{display:block;font-size:1rem;color:var(--ash);margin-bottom:.3rem}
+.field input,.field textarea{width:100%;font-family:var(--body);font-size:1.1rem;color:var(--bone);background:#0a0002;border:1px solid rgba(196,0,28,.5);padding:.65rem .8rem;border-radius:0}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--fresh);box-shadow:0 0 0 2px rgba(227,16,46,.25)}
+.field textarea{min-height:7rem;resize:vertical}
+.form-foot{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;margin-top:1.25rem}
+.form-foot small{color:var(--ash);font-style:italic;font-size:.95rem;flex:1;min-width:14rem}
+.form-msg{margin-top:1rem;font-style:italic;color:var(--bone);min-height:1.5em}
+
+/* ---------- Socials ---------- */
+.socials{text-align:center}
+.social-row{display:flex;flex-wrap:wrap;justify-content:center;gap:1.25rem;margin-top:2rem}
+.social{display:flex;align-items:center;gap:1rem;text-decoration:none;border:1px solid var(--line);background:rgba(0,0,0,.7);padding:1rem 1.5rem;min-width:17rem;color:var(--bone);transition:border-color .2s,background .2s}
+.social:hover{border-color:var(--fresh);background:rgba(138,0,16,.25);color:var(--bone)}
+.social svg{width:40px;height:40px;flex:none}
+.social span{text-align:left;line-height:1.3}
+.social small{display:block;color:var(--ash);font-style:italic;font-size:.95rem}
+.social b{font-weight:400;font-size:1.2rem}
+
+/* ---------- Room block banner ---------- */
+.room{position:relative;z-index:1;background:linear-gradient(180deg,#a3000f,#6e000b);border-top:2px solid #ff3348;border-bottom:2px solid #3a0006;text-align:center;padding:2.25rem 1.25rem;box-shadow:inset 0 0 80px rgba(0,0,0,.45)}
+.room h2{font-size:clamp(2rem,6vw,3.2rem);color:#fff3e6;margin:0 0 .5rem;text-shadow:0 2px 0 #3a0006}
+.room p{margin:0 auto;max-width:40rem;font-style:italic;font-size:1.2rem;color:#ffe2da}
+
+/* ---------- Music toggle ---------- */
+.music-btn{position:fixed;right:1rem;bottom:calc(1rem + env(safe-area-inset-bottom,0px));z-index:50;display:flex;align-items:center;gap:.5rem;font-family:var(--body);font-size:1rem;color:var(--bone);background:rgba(0,0,0,.85);border:1px solid var(--crimson);padding:.55rem .9rem;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.6)}
+.music-btn:hover{background:rgba(138,0,16,.6)}
+.music-btn .bars{display:flex;gap:2px;align-items:flex-end;height:14px}
+.music-btn .bars i{width:3px;background:var(--fresh);height:4px}
+.music-btn[aria-pressed="true"] .bars i{animation:bar 1.1s ease-in-out infinite}
+.music-btn .bars i:nth-child(2){animation-delay:-.4s}.music-btn .bars i:nth-child(3){animation-delay:-.75s}
+@keyframes bar{0%,100%{height:3px}50%{height:14px}}
+.music-btn[hidden]{display:none}
+
 /* applications */
 .apps{display:flex;flex-direction:column;gap:1rem;margin-top:2.5rem}
 .apps .tier summary{grid-template-columns:auto 1fr auto}
@@ -193,7 +307,7 @@ h3{font-family:var(--display);font-weight:400;font-size:2rem;line-height:1.1;mar
 .contact .mail{font-size:clamp(1.15rem,3.6vw,1.6rem);word-break:break-word;display:inline-block;margin:.5rem 0 2rem}
 .contact .btns{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem}
 
-footer{border-top:1px solid var(--line);padding:2.5rem 1.25rem;text-align:center;color:var(--ash);font-size:1rem;background:#000}
+footer{border-top:1px solid var(--line);padding:2.5rem 1.25rem 5.5rem;text-align:center;color:var(--ash);font-size:1rem;background:#000}
 footer p{margin:.3rem 0}
 footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
 
@@ -260,7 +374,7 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
     </svg>
     <h1 id="gate-title">You must be invited in</h1>
     <p>Every door in this house stays sealed to strangers. Nothing crosses the threshold uninvited, not even you.</p>
-    <p class="fine">This gathering is for guests 18 and over.</p>
+    <p class="fine">This gathering is for guests 18 and over. Music will play once you enter.</p>
     <label class="check">
       <input type="checkbox" id="ageCheck">
       <span>I am 18 or older, and I accept this invitation.</span>
@@ -273,16 +387,111 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
   </div>
 </div>
 
+<script>
+/* Gate script sits right after the gate so it works even if the rest of the page is slow or cut off */
+(function(){
+  /* ---- invitation gate ---- */
+  var gate=document.getElementById("gate"),check=document.getElementById("ageCheck"),enter=document.getElementById("enterBtn"),leave=document.getElementById("leaveBtn"),refusal=document.getElementById("refusal");
+  check.addEventListener("change",function(){enter.disabled=!check.checked;refusal.textContent="";});
+  enter.addEventListener("click",function(){
+    gate.classList.add("open");
+    if(window.mamMusic) window.mamMusic.start();
+    document.body.classList.remove("locked");
+    setTimeout(function(){gate.classList.add("gone");},1700);
+  });
+  leave.addEventListener("click",function(){
+    check.checked=false;enter.disabled=true;
+    refusal.textContent="The door remains closed. Return when you are 18 and the invitation is yours to accept.";
+  });
+
+})();
+</script>
+
+<button class="music-btn" id="musicBtn" aria-pressed="false" hidden><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="musicLabel">Music off</span></button>
+<script>
+/* Original generated gothic ambience (Web Audio). Composed in code, so it carries no copyright. */
+(function(){
+  var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+  var ctx=null, master, wet, dry, timer=null, playing=false, nextChord=0, chordIdx=0;
+  var btn=document.getElementById("musicBtn"), label=document.getElementById("musicLabel");
+  function hz(n){return 440*Math.pow(2,(n-69)/12);}
+  /* D minor walk: Dm, Bb, Gm, A */
+  var chords=[[50,53,57],[46,50,53],[43,46,50],[45,49,52]];
+  var bells=[74,76,77,81,84,86,89];
+  function impulse(sec){
+    var len=ctx.sampleRate*sec, b=ctx.createBuffer(2,len,ctx.sampleRate);
+    for(var c=0;c<2;c++){var d=b.getChannelData(c);for(var i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);}
+    return b;
+  }
+  function build(){
+    ctx=new AC();
+    master=ctx.createGain();master.gain.value=0;master.connect(ctx.destination);
+    var rev=ctx.createConvolver();rev.buffer=impulse(5);
+    wet=ctx.createGain();wet.gain.value=.75;rev.connect(wet);wet.connect(master);
+    dry=ctx.createGain();dry.gain.value=.45;dry.connect(master);
+    wet.input=rev;
+    /* low organ drone with a slowly breathing filter */
+    var lp=ctx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=260;lp.Q.value=4;
+    var lfo=ctx.createOscillator(),lfoG=ctx.createGain();lfo.frequency.value=.05;lfoG.gain.value=120;lfo.connect(lfoG);lfoG.connect(lp.frequency);lfo.start();
+    var dg=ctx.createGain();dg.gain.value=.07;
+    [hz(38),hz(38)*1.004,hz(26)].forEach(function(f,i){var o=ctx.createOscillator();o.type=i==2?"sine":"sawtooth";o.frequency.value=f;o.connect(lp);o.start();});
+    lp.connect(dg);dg.connect(dry);dg.connect(rev);
+  }
+  function pad(t,notes){
+    var f=ctx.createBiquadFilter();f.type="lowpass";f.frequency.value=900;
+    var g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+3);g.gain.setValueAtTime(.05,t+7);g.gain.linearRampToValueAtTime(0,t+11);
+    f.connect(g);g.connect(dry);g.connect(wet.input);
+    notes.forEach(function(n){[["triangle",0],["sawtooth",7]].forEach(function(v){var o=ctx.createOscillator();o.type=v[0];o.frequency.value=hz(n);o.detune.value=v[1];o.connect(f);o.start(t);o.stop(t+11.5);});});
+  }
+  function bell(t){
+    var n=bells[Math.floor(Math.random()*bells.length)], g=ctx.createGain();
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.06,t+.01);g.gain.exponentialRampToValueAtTime(.0005,t+4);
+    g.connect(wet.input);g.connect(dry);
+    [[1,1],[2.76,.25],[5.4,.08]].forEach(function(p){var o=ctx.createOscillator(),pg=ctx.createGain();o.type="sine";o.frequency.value=hz(n)*p[0];pg.gain.value=p[1];o.connect(pg);pg.connect(g);o.start(t);o.stop(t+4.2);});
+  }
+  function schedule(){
+    while(nextChord<ctx.currentTime+1){
+      pad(nextChord,chords[chordIdx%chords.length]);
+      for(var k=0;k<4;k++){ if(Math.random()<.55) bell(nextChord+1+k*2+Math.random()*.6); }
+      chordIdx++; nextChord+=8;
+    }
+  }
+  function start(){
+    if(!ctx) build();
+    ctx.resume();
+    if(!nextChord) nextChord=ctx.currentTime+.1;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setValueAtTime(master.gain.value,ctx.currentTime);
+    master.gain.linearRampToValueAtTime(.55,ctx.currentTime+4);
+    schedule(); if(!timer) timer=setInterval(schedule,400);
+    playing=true; btn.setAttribute("aria-pressed","true"); label.textContent="Music on";
+  }
+  function stop(){
+    if(!ctx) return;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setValueAtTime(master.gain.value,ctx.currentTime);
+    master.gain.linearRampToValueAtTime(0,ctx.currentTime+1.2);
+    setTimeout(function(){ if(!playing){ctx.suspend();clearInterval(timer);timer=null;nextChord=0;} },1400);
+    playing=false; btn.setAttribute("aria-pressed","false"); label.textContent="Music off";
+  }
+  btn.addEventListener("click",function(){ playing?stop():start(); });
+  window.mamMusic={start:function(){btn.hidden=false;try{start();}catch(e){}}};
+})();
+</script>
+
 <header class="top">
   <nav class="nav" aria-label="Main">
     <a class="brand" href="#top">Moments After Midnight</a>
     <ul>
       <li><a class="link" href="#nights">The nights</a></li>
+      <li><a class="link" href="#spotlights">Spotlights</a></li>
+      <li><a class="link" href="#panels">Panels</a></li>
       <li><a class="link" href="#masquerade">Masquerade</a></li>
       <li><a class="link" href="#anthology">Anthology</a></li>
       <li><a class="link" href="#tickets">Tickets</a></li>
       <li><a class="link" href="#apply">Apply</a></li>
       <li><a class="link" href="#court">Hosts</a></li>
+      <li><a class="link" href="#find-us">Find us</a></li>
       <li><a class="link" href="#contact">Contact</a></li>
     </ul>
   </nav>
@@ -319,6 +528,34 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
     </div>
   </section>
 
+  <section class="mc" id="ceremonies">
+    <div class="mc-head">
+      <h2>Masters of the Revels</h2>
+      <p class="lede" style="margin:0 auto">A decree has been sealed in wax. Break it, if you dare, to learn who will command the night.</p>
+    </div>
+    <div class="mc-stage">
+      <div class="candle l" aria-hidden="true"><div class="glow"></div><div class="flame"></div><div class="wick"></div><div class="wax"></div><div class="holder"></div><div class="base"></div></div>
+      <div class="scroll" id="mcScroll">
+        <div class="rod" aria-hidden="true"></div>
+        <div class="parchment" id="mcParchment" aria-hidden="true">
+          <div class="parchment-inner">
+            <p class="decree">By order of the court</p>
+            <h3>Your hosts of the evening</h3>
+            <div class="roles">
+              <div class="role-card"><p class="title">Master of Ceremonies</p><p class="who-name">Name Sealed</p><p class="soon">Revealed soon</p></div>
+              <div class="role-card"><p class="title">Mistress of Ceremonies</p><p class="who-name">Name Sealed</p><p class="soon">Revealed soon</p></div>
+            </div>
+            <p class="sign">Their names remain in shadow a little longer. Keep watch, for the unveiling draws near.</p>
+          </div>
+        </div>
+        <div class="rod" aria-hidden="true"></div>
+        <button class="seal-btn" id="mcSeal" aria-expanded="false" aria-controls="mcParchment">Break the seal</button>
+      </div>
+      <div class="candle r tall" aria-hidden="true"><div class="glow"></div><div class="flame"></div><div class="wick"></div><div class="wax"></div><div class="holder"></div><div class="base"></div></div>
+    </div>
+    <p class="mc-hint" id="mcHint">Press the wax seal to unroll the scroll.</p>
+  </section>
+
   <section id="nights">
     <div class="wrap">
       <h2>Three nights in the dark</h2>
@@ -343,7 +580,7 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
           <li><time>10:00 am</time><div><h4>Signings open</h4><p>First to the tables, first to the ink.</p><span class="who">The Order of the Crescent</span></div></li>
           <li><time>1:00 pm</time><div><h4>Signings continue</h4><span class="who">The Midnight Royalty joins</span></div></li>
           <li><time>2:30 pm</time><div><h4>Signings continue</h4><span class="who">The Midnight Coven joins</span></div></li>
-          <li><time>All day</time><div><h4>Panels &amp; Featured Spotlights</h4><p>Conversations and spotlight segments, livestreamed and hosted by your favorite Spotlighters and influencers.</p></div></li>
+          <li><time>All day</time><div><h4>Panels &amp; Featured Spotlights</h4><p>Spotlights run alongside the signings, each in its own space, while panels gather the crowd. All broadcast live and hosted by your favorite Spotlighters and influencers.</p></div></li>
           <li><time>6:30–7:30 pm</time><div><h4>Narrator Hour</h4><p>An hour that belongs to the narrators alone. Authors and guests meet the voices that bring our stories to life, and we honor the craft behind every chapter you’ve ever heard.</p></div></li>
           <li><time>9:00 pm</time><div><h4>The Moonlit Masquerade</h4><p>An immersive experience where the story unfolds before your eyes. Formal attire required.</p></div></li>
         </ol>
@@ -354,13 +591,59 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
           <li><time>Morning</time><div><h4>Sunrise Mimosa Moment</h4><p>A toast to the dawn, for those who survived the night before.</p><span class="who">VIP: The Order of the Crescent and The Midnight Royalty</span></div></li>
           <li><time>10:00 am</time><div><h4>Signings open</h4><span class="who">All VIP: The Order of the Crescent and The Midnight Royalty</span></div></li>
           <li><time>1:00 pm</time><div><h4>Signings continue</h4><span class="who">The Midnight Coven joins</span></div></li>
-          <li><time>All day</time><div><h4>Panels &amp; Spotlights</h4><p>A full host of panels and spotlight segments throughout the day.</p></div></li>
+          <li><time>All day</time><div><h4>Panels &amp; Spotlights</h4><p>More spotlights during the signings and a full host of panels, broadcast live and recorded.</p></div></li>
           <li><time>5:00–6:00 pm</time><div><h4>Narrator Hour</h4><p>One last hour with the voices behind the pages.</p></div></li>
           <li><time>6:00–7:00 pm</time><div><h4>Raffles &amp; game winners</h4><p>The fates are revealed, prizes are claimed, and the convention draws to a close.</p></div></li>
           <li><time>After dark</time><div><h4>A special evening of unwinding</h4><p>One that will make you blush. More details will be whispered soon.</p></div></li>
         </ol>
       </div>
       <p class="note">Exact times for panels and spotlights will be revealed closer to the convention.</p>
+    </div>
+  </section>
+
+  <section class="spot" id="spotlights">
+    <div class="wrap">
+      <h2>Spotlights</h2>
+      <p class="lede">While the signing tables fill, the lights find their stars. Spotlights run all weekend during the Friday and Saturday signings, each one unfolding in its own separate space.</p>
+      <p class="spot-feature">Every author and every narrator in attendance will have a chance to step into the light, spotlighted by one of our attending influencers.</p>
+      <div class="spot-grid">
+        <div class="spot-card">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="9" width="30" height="24" fill="none" stroke="#c4001c" stroke-width="2"/><path d="M5 15 H35 M12 5 V12 M28 5 V12" stroke="#c4001c" stroke-width="2"/><circle cx="20" cy="24" r="4" fill="#ecdcc8"/></svg>
+          <h3>During the signings</h3>
+          <p>Friday and Saturday, all weekend long, running alongside the signing hours.</p>
+        </div>
+        <div class="spot-card">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 4 L8 36 H32Z" fill="rgba(236,220,200,.25)"/><circle cx="20" cy="6" r="4" fill="#c4001c"/><rect x="12" y="34" width="16" height="3" fill="#ecdcc8"/></svg>
+          <h3>A space of its own</h3>
+          <p>Each spotlight has its own separate space, so every conversation gets the room it deserves.</p>
+        </div>
+        <div class="spot-card">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="14" cy="14" r="6" fill="#c4001c"/><circle cx="27" cy="16" r="5" fill="#ecdcc8"/><path d="M4 34 C4 24 24 24 24 34 M20 34 C20 26 36 26 36 34" fill="none" stroke="#c4001c" stroke-width="2"/></svg>
+          <h3>Authors &amp; narrators</h3>
+          <p>All attending authors and narrators have a chance to be featured by one of our influencers.</p>
+        </div>
+        <div class="spot-card">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="6" fill="#e3102e"/><path d="M10 10 A14 14 0 0 0 10 30 M30 10 A14 14 0 0 1 30 30 M5 5 A21 21 0 0 0 5 35 M35 5 A21 21 0 0 1 35 35" fill="none" stroke="#ecdcc8" stroke-width="2"/></svg>
+          <h3>Live &amp; recorded</h3>
+          <p>Broadcast live all weekend and recorded, so every spotlight lives on as content long after the con.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panels-sec" id="panels">
+    <div class="wrap panels-layout">
+      <div>
+        <span class="live"><i></i>Live all weekend</span>
+        <h2>Panels</h2>
+        <p class="lede">Pull up a chair in the candlelight. Our panels gather authors, narrators and creators for conversations about the stories that keep us up past midnight, hosted by your favorite Spotlighters and influencers.</p>
+        <p>Every panel will be broadcast live all weekend and recorded for later content, so readers near and far can join the conversation and return to it again and again.</p>
+      </div>
+      <ul class="panel-days">
+        <li><b>Friday, October 29</b><span>Panels throughout the day</span></li>
+        <li><b>Saturday, October 30</b><span>A full host of panels</span></li>
+        <li><b>Topics &amp; times</b><span>Revealed closer to the convention</span></li>
+      </ul>
     </div>
   </section>
 
@@ -384,18 +667,37 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
   </section>
 
   <section id="anthology">
-    <div class="wrap anth">
-      <div class="book" aria-hidden="true">
-        <strong>Moments After Midnight</strong>
-        <em>Where stories breathe between the pages</em>
-        <span class="vol">Volume I</span>
+    <div class="wrap">
+      <div class="anth">
+        <div class="book" aria-hidden="true">
+          <strong>Moments After Midnight</strong>
+          <em>Where stories breathe between the pages</em>
+          <span class="vol">Volume I</span>
+        </div>
+        <div>
+          <h2>Bound by moonlight</h2>
+          <p>On Thursday night, our narrators read the short stories submitted to the convention aloud, one voice at a time. When the last word fades, those stories are bound together into the very first Moments After Midnight anthology.</p>
+          <p>A first edition, born in a single night, carrying every voice that filled the room.</p>
+          <p class="deadline">Submissions must be received by <b>August 15, 2027</b></p>
+        </div>
       </div>
-      <div>
-        <h2>Bound by moonlight</h2>
-        <p>On Thursday night, our narrators read the short stories submitted to the convention aloud, one voice at a time. When the last word fades, those stories are bound together into the very first Moments After Midnight anthology.</p>
-        <p>A first edition, born in a single night, carrying every voice that filled the room.</p>
-        <p><a href="mailto:momentsaftermidnightcon@gmail.com?subject=Anthology%20submission%20inquiry">Ask about submitting a story</a></p>
-      </div>
+
+      <form class="sub-form" id="subForm" novalidate>
+        <h3>Submit your story</h3>
+        <p style="margin:0;color:var(--ash)">Fill in the details below. When you press submit, your email app opens with everything addressed to momentsaftermidnightcon@gmail.com. Attach your story to that email and send it.</p>
+        <div class="grid">
+          <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" autocomplete="name" required></div>
+          <div class="field"><label for="f-pen">Pen name (if different)</label><input id="f-pen" name="pen"></div>
+          <div class="field"><label for="f-email">Email address</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="f-title">Story title</label><input id="f-title" name="title" required></div>
+          <div class="field full"><label for="f-note">A few words about your story</label><textarea id="f-note" name="note" placeholder="A short summary, or anything you'd like us to know"></textarea></div>
+        </div>
+        <div class="form-foot">
+          <button class="btn" type="submit">Submit my story</button>
+          <small>Remember to attach your story before sending. Submissions close August 15, 2027.</small>
+        </div>
+        <p class="form-msg" id="formMsg" aria-live="polite"></p>
+      </form>
     </div>
   </section>
 
@@ -523,6 +825,17 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
             <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdK78mWFlYusNqTlbD45_lCdLlcT8HRcHdDClHw7laAy9pZKQ/viewform" target="_blank" rel="noopener">Apply as an author</a>
           </div>
         </details>
+        <details class="tier">
+          <summary>
+            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6 L10 42 H38Z" fill="rgba(236,220,200,.3)"/><circle cx="24" cy="9" r="6" fill="#c4001c"/><path d="M14 30 L17 33 L24 26 L31 33 L34 30" fill="none" stroke="#ecdcc8" stroke-width="2"/></svg>
+            <span><span class="name">Influencers &amp; Spotlighters</span><span class="rank">Shine the light</span></span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+          </summary>
+          <div class="tier-body">
+            <p>Host spotlights during the Friday and Saturday signings, shine your light on the authors and narrators of the weekend, and carry the convention live to your audience.</p>
+            <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfByhdlsGCPIxfLJcZiShgh2k3S4ctv7LX2QcTyyZzX2b2rng/viewform?usp=publish-editor" target="_blank" rel="noopener">Apply as an influencer or spotlighter</a>
+          </div>
+        </details>
       </div>
       <p class="note">Each application opens in a new tab. Questions can be sent to momentsaftermidnightcon@gmail.com.</p>
     </div>
@@ -551,7 +864,28 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
       </div>
     </div>
   </section>
+  <section class="socials" id="find-us">
+    <div class="wrap">
+      <h2>Find us in the dark</h2>
+      <p class="lede" style="margin:0 auto">Follow along for reveals, sneak peeks and whispers from the court.</p>
+      <div class="social-row">
+        <a class="social" href="https://www.tiktok.com/@momentsaftermidnightcon" target="_blank" rel="noopener">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="none" stroke="#c4001c" stroke-width="2"/><path d="M23 10 V25 a5 5 0 1 1 -5 -5" fill="none" stroke="#ecdcc8" stroke-width="2.5"/><path d="M23 10 C24 14 27 16 30 16" fill="none" stroke="#e3102e" stroke-width="2.5"/></svg>
+          <span><small>TikTok</small><b>@momentsaftermidnightcon</b></span>
+        </a>
+        <a class="social" href="https://www.instagram.com/momentsaftermidnight" target="_blank" rel="noopener">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="none" stroke="#c4001c" stroke-width="2"/><rect x="11" y="13" width="18" height="14" rx="2" fill="none" stroke="#ecdcc8" stroke-width="2.2"/><circle cx="20" cy="20" r="3.5" fill="none" stroke="#e3102e" stroke-width="2.2"/><path d="M14 13 L16 10 H22 L24 13" fill="none" stroke="#ecdcc8" stroke-width="2.2"/></svg>
+          <span><small>Instagram</small><b>@momentsaftermidnight</b></span>
+        </a>
+      </div>
+    </div>
+  </section>
 </main>
+
+<aside class="room" aria-label="Hotel room block">
+  <h2>Room Block Available Soon at The Hyatt Regency</h2>
+  <p>Every creature of the night needs a place to lay its head before dawn. Rest just an elevator ride away from every signing, spotlight and the Moonlit Masquerade.</p>
+</aside>
 
 <footer>
   <p class="big">Moments After Midnight</p>
@@ -587,17 +921,26 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
   }
   el("circle",{r:40},rose);
 
-  /* ---- invitation gate ---- */
-  var gate=document.getElementById("gate"),check=document.getElementById("ageCheck"),enter=document.getElementById("enterBtn"),leave=document.getElementById("leaveBtn"),refusal=document.getElementById("refusal");
-  check.addEventListener("change",function(){enter.disabled=!check.checked;refusal.textContent="";});
-  enter.addEventListener("click",function(){
-    gate.classList.add("open");
-    document.body.classList.remove("locked");
-    setTimeout(function(){gate.classList.add("gone");},1700);
+  /* ---- MC scroll ---- */
+  var scr=document.getElementById("mcScroll"),seal=document.getElementById("mcSeal"),parch=document.getElementById("mcParchment"),hint=document.getElementById("mcHint");
+  seal.addEventListener("click",function(){
+    var open=scr.classList.toggle("open");
+    seal.setAttribute("aria-expanded",open);parch.setAttribute("aria-hidden",!open);
+    seal.textContent=open?"Roll it up":"Break the seal";
+    hint.textContent=open?"The names are still sealed. Return soon for the unveiling.":"Press the wax seal to unroll the scroll.";
   });
-  leave.addEventListener("click",function(){
-    check.checked=false;enter.disabled=true;
-    refusal.textContent="The door remains closed. Return when you are 18 and the invitation is yours to accept.";
+
+  /* ---- anthology submission form ---- */
+  var form=document.getElementById("subForm"),msg=document.getElementById("formMsg");
+  form.addEventListener("submit",function(e){
+    e.preventDefault();
+    var f=form.elements, need=[f.name,f.email,f.title], missing=need.filter(function(x){return !x.value.trim();});
+    if(missing.length){msg.textContent="Please fill in your name, email and story title.";missing[0].focus();return;}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.value.trim())){msg.textContent="That email address doesn't look quite right.";f.email.focus();return;}
+    var body="Name: "+f.name.value.trim()+"\nPen name: "+(f.pen.value.trim()||"(same)")+"\nEmail: "+f.email.value.trim()+"\nStory title: "+f.title.value.trim()+"\n\nAbout the story:\n"+(f.note.value.trim()||"(none)")+"\n\n[Please attach your story to this email before sending.]";
+    var url="mailto:momentsaftermidnightcon@gmail.com?subject="+encodeURIComponent("Anthology Submission: "+f.title.value.trim())+"&body="+encodeURIComponent(body);
+    var a=document.createElement("a");a.href=url;a.target="_top";document.body.appendChild(a);a.click();a.remove();
+    msg.textContent="Your email app should now be open. Attach your story and press send. If nothing opened, email your story to momentsaftermidnightcon@gmail.com.";
   });
 
   /* ---- countdown ---- */
