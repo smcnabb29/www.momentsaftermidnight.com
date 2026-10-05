@@ -340,4 +340,659 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
   </g>
   <!-- spiked gothic ring -->
   <g id="spikes" fill="#4a0009" stroke="#8a0010" stroke-width="2"></g>
-  <circle r="262" fill="none"
+  <circle r="262" fill="none" stroke="#8a0010" stroke-width="3"/>
+  <circle r="250" fill="url(#face)" stroke="#c4001c" stroke-width="5"/>
+  <circle r="232" fill="none" stroke="#4a0009" stroke-width="2"/>
+  <g id="ticks"></g>
+  <g id="numerals" fill="#ecdcc8" font-family="Pirata One, Georgia, serif" font-size="38" text-anchor="middle" dominant-baseline="central"></g>
+  <circle r="128" fill="none" stroke="#4a0009" stroke-width="1.5"/>
+  <!-- gothic rose window centre -->
+  <g id="rose" fill="none" stroke="#8a0010" stroke-width="1.5" opacity=".9"></g>
+  <!-- hour hand (12:05 → 2.5deg) -->
+  <g transform="rotate(2.5)">
+    <path d="M0 22 L-7 0 L-4 -70 C-22 -86 -22 -112 0 -128 C22 -112 22 -86 4 -70 L7 0Z" fill="#ecdcc8"/>
+    <circle cx="0" cy="-99" r="10" fill="#2a0007"/>
+  </g>
+  <!-- minute hand (5 min → 30deg) -->
+  <g transform="rotate(30)">
+    <path d="M0 34 L-5 0 L-3 -150 L-12 -168 L0 -212 L12 -168 L3 -150 L5 0Z" fill="#ecdcc8"/>
+    <path d="M0 -150 C-10 -158 -10 -172 0 -180 C10 -172 10 -158 0 -150Z" fill="#c4001c"/>
+  </g>
+  <circle r="14" fill="#c4001c" stroke="#ecdcc8" stroke-width="3"/>
+</svg>
+</div>
+
+<!-- Invitation gate -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+  <div class="door left"></div>
+  <div class="door right"></div>
+  <div class="letter">
+    <svg class="seal" viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M50 4 C62 6 66 2 74 10 C84 14 86 22 92 30 C98 42 94 50 96 60 C94 72 88 78 82 86 C72 94 62 94 50 96 C38 98 28 92 18 86 C10 78 6 70 4 58 C2 46 8 38 10 28 C16 16 26 10 36 6 C42 4 46 4 50 4Z" fill="#8a0010"/>
+      <circle cx="50" cy="50" r="33" fill="none" stroke="#5a000a" stroke-width="3"/>
+      <path d="M58 30 A22 22 0 1 0 58 70 A17 17 0 1 1 58 30Z" fill="#ecdcc8" opacity=".9"/>
+    </svg>
+    <h1 id="gate-title">You must be invited in</h1>
+    <p>Every door in this house stays sealed to strangers. Nothing crosses the threshold uninvited, not even you.</p>
+    <p class="fine">This gathering is for guests 18 and over. Music will play once you enter.</p>
+    <label class="check">
+      <input type="checkbox" id="ageCheck">
+      <span>I am 18 or older, and I accept this invitation.</span>
+    </label>
+    <div class="gate-actions">
+      <button class="btn" id="enterBtn" disabled>Invite me in</button>
+      <button class="btn ghost" id="leaveBtn">Leave the doorstep</button>
+    </div>
+    <p class="refusal" id="refusal" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+/* Gate script sits right after the gate so it works even if the rest of the page is slow or cut off */
+(function(){
+  /* ---- invitation gate ---- */
+  var gate=document.getElementById("gate"),check=document.getElementById("ageCheck"),enter=document.getElementById("enterBtn"),leave=document.getElementById("leaveBtn"),refusal=document.getElementById("refusal");
+  check.addEventListener("change",function(){enter.disabled=!check.checked;refusal.textContent="";});
+  enter.addEventListener("click",function(){
+    gate.classList.add("open");
+    if(window.mamMusic) window.mamMusic.start();
+    document.body.classList.remove("locked");
+    setTimeout(function(){gate.classList.add("gone");},1700);
+  });
+  leave.addEventListener("click",function(){
+    check.checked=false;enter.disabled=true;
+    refusal.textContent="The door remains closed. Return when you are 18 and the invitation is yours to accept.";
+  });
+
+})();
+</script>
+
+<button class="music-btn" id="musicBtn" aria-pressed="false" hidden><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="musicLabel">Music off</span></button>
+<script>
+/* Original generated gothic ambience (Web Audio). Composed in code, so it carries no copyright. */
+(function(){
+  var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+  var ctx=null, master, wet, dry, timer=null, playing=false, nextChord=0, chordIdx=0;
+  var btn=document.getElementById("musicBtn"), label=document.getElementById("musicLabel");
+  function hz(n){return 440*Math.pow(2,(n-69)/12);}
+  /* D minor walk: Dm, Bb, Gm, A */
+  var chords=[[50,53,57],[46,50,53],[43,46,50],[45,49,52]];
+  var bells=[74,76,77,81,84,86,89];
+  function impulse(sec){
+    var len=ctx.sampleRate*sec, b=ctx.createBuffer(2,len,ctx.sampleRate);
+    for(var c=0;c<2;c++){var d=b.getChannelData(c);for(var i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);}
+    return b;
+  }
+  function build(){
+    ctx=new AC();
+    master=ctx.createGain();master.gain.value=0;master.connect(ctx.destination);
+    var rev=ctx.createConvolver();rev.buffer=impulse(5);
+    wet=ctx.createGain();wet.gain.value=.75;rev.connect(wet);wet.connect(master);
+    dry=ctx.createGain();dry.gain.value=.45;dry.connect(master);
+    wet.input=rev;
+    /* low organ drone with a slowly breathing filter */
+    var lp=ctx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=260;lp.Q.value=4;
+    var lfo=ctx.createOscillator(),lfoG=ctx.createGain();lfo.frequency.value=.05;lfoG.gain.value=120;lfo.connect(lfoG);lfoG.connect(lp.frequency);lfo.start();
+    var dg=ctx.createGain();dg.gain.value=.07;
+    [hz(38),hz(38)*1.004,hz(26)].forEach(function(f,i){var o=ctx.createOscillator();o.type=i==2?"sine":"sawtooth";o.frequency.value=f;o.connect(lp);o.start();});
+    lp.connect(dg);dg.connect(dry);dg.connect(rev);
+  }
+  function pad(t,notes){
+    var f=ctx.createBiquadFilter();f.type="lowpass";f.frequency.value=900;
+    var g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+3);g.gain.setValueAtTime(.05,t+7);g.gain.linearRampToValueAtTime(0,t+11);
+    f.connect(g);g.connect(dry);g.connect(wet.input);
+    notes.forEach(function(n){[["triangle",0],["sawtooth",7]].forEach(function(v){var o=ctx.createOscillator();o.type=v[0];o.frequency.value=hz(n);o.detune.value=v[1];o.connect(f);o.start(t);o.stop(t+11.5);});});
+  }
+  function bell(t){
+    var n=bells[Math.floor(Math.random()*bells.length)], g=ctx.createGain();
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.06,t+.01);g.gain.exponentialRampToValueAtTime(.0005,t+4);
+    g.connect(wet.input);g.connect(dry);
+    [[1,1],[2.76,.25],[5.4,.08]].forEach(function(p){var o=ctx.createOscillator(),pg=ctx.createGain();o.type="sine";o.frequency.value=hz(n)*p[0];pg.gain.value=p[1];o.connect(pg);pg.connect(g);o.start(t);o.stop(t+4.2);});
+  }
+  function schedule(){
+    while(nextChord<ctx.currentTime+1){
+      pad(nextChord,chords[chordIdx%chords.length]);
+      for(var k=0;k<4;k++){ if(Math.random()<.55) bell(nextChord+1+k*2+Math.random()*.6); }
+      chordIdx++; nextChord+=8;
+    }
+  }
+  function start(){
+    if(!ctx) build();
+    ctx.resume();
+    if(!nextChord) nextChord=ctx.currentTime+.1;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setValueAtTime(master.gain.value,ctx.currentTime);
+    master.gain.linearRampToValueAtTime(.55,ctx.currentTime+4);
+    schedule(); if(!timer) timer=setInterval(schedule,400);
+    playing=true; btn.setAttribute("aria-pressed","true"); label.textContent="Music on";
+  }
+  function stop(){
+    if(!ctx) return;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setValueAtTime(master.gain.value,ctx.currentTime);
+    master.gain.linearRampToValueAtTime(0,ctx.currentTime+1.2);
+    setTimeout(function(){ if(!playing){ctx.suspend();clearInterval(timer);timer=null;nextChord=0;} },1400);
+    playing=false; btn.setAttribute("aria-pressed","false"); label.textContent="Music off";
+  }
+  btn.addEventListener("click",function(){ playing?stop():start(); });
+  window.mamMusic={start:function(){btn.hidden=false;try{start();}catch(e){}}};
+})();
+</script>
+
+<header class="top">
+  <nav class="nav" aria-label="Main">
+    <a class="brand" href="#top">Moments After Midnight</a>
+    <ul>
+      <li><a class="link" href="#nights">The nights</a></li>
+      <li><a class="link" href="#spotlights">Spotlights</a></li>
+      <li><a class="link" href="#panels">Panels</a></li>
+      <li><a class="link" href="#masquerade">Masquerade</a></li>
+      <li><a class="link" href="#anthology">Anthology</a></li>
+      <li><a class="link" href="#tickets">Tickets</a></li>
+      <li><a class="link" href="#apply">Apply</a></li>
+      <li><a class="link" href="#court">Hosts</a></li>
+      <li><a class="link" href="#find-us">Find us</a></li>
+      <li><a class="link" href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div>
+      <p class="when">October 28–30, 2027<br>Hyatt Regency New Orleans</p>
+      <h1 class="title"><span>Moments</span><span class="after">After Midnight</span></h1>
+      <p class="tag">A vampire fantasy book convention, three nights deep, where stories breathe between the pages.</p>
+      <div class="countdown" aria-label="Time until the convention begins">
+        <div><b id="cd-d">000</b><small>nights</small></div>
+        <div><b id="cd-h">00</b><small>hours</small></div>
+        <div><b id="cd-m">00</b><small>minutes</small></div>
+        <div><b id="cd-s">00</b><small>heartbeats</small></div>
+      </div>
+      <div class="hero-actions">
+        <a class="btn" href="#tickets">Choose your bloodline</a>
+        <a class="btn ghost" href="#nights">See the three nights</a>
+      </div>
+      <p class="age">Strictly 18+. The clock has already struck twelve.</p>
+    </div>
+  </section>
+
+  <section class="intro">
+    <div class="wrap narrow">
+      <h2>The hour belongs to us</h2>
+      <p>New Orleans has always kept the company of the undying. Its fog remembers names, its iron balconies keep secrets, and for three nights this October it opens its doors to the ones who write them down.</p>
+      <p>Walk among indie authors who bleed onto the page, the narrators who give their characters a pulse, the vendors with treasures for your shelves, and the cosplayers who step straight out of the chapters you love. Come as a reader. Leave as part of the tale.</p>
+      <ul class="cast" aria-label="Who you'll meet">
+        <li>Indie authors</li><li>Narrators</li><li>Vendors</li><li>Influencers</li><li>Spotlighters</li><li>Cosplayers</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="mc" id="ceremonies">
+    <div class="mc-head">
+      <h2>Masters of the Revels</h2>
+      <p class="lede" style="margin:0 auto">A decree has been sealed in wax. Break it, if you dare, to learn who will command the night.</p>
+    </div>
+    <div class="mc-stage">
+      <div class="candle l" aria-hidden="true"><div class="glow"></div><div class="flame"></div><div class="wick"></div><div class="wax"></div><div class="holder"></div><div class="base"></div></div>
+      <div class="scroll" id="mcScroll">
+        <div class="rod" aria-hidden="true"></div>
+        <div class="parchment" id="mcParchment" aria-hidden="true">
+          <div class="parchment-inner">
+            <p class="decree">By order of the court</p>
+            <h3>Your hosts of the evening</h3>
+            <div class="roles">
+              <div class="role-card"><p class="title">Master of Ceremonies</p><p class="who-name">Name Sealed</p><p class="soon">Revealed soon</p></div>
+              <div class="role-card"><p class="title">Mistress of Ceremonies</p><p class="who-name">Name Sealed</p><p class="soon">Revealed soon</p></div>
+            </div>
+            <p class="sign">Their names remain in shadow a little longer. Keep watch, for the unveiling draws near.</p>
+          </div>
+        </div>
+        <div class="rod" aria-hidden="true"></div>
+        <button class="seal-btn" id="mcSeal" aria-expanded="false" aria-controls="mcParchment">Break the seal</button>
+      </div>
+      <div class="candle r tall" aria-hidden="true"><div class="glow"></div><div class="flame"></div><div class="wick"></div><div class="wax"></div><div class="holder"></div><div class="base"></div></div>
+    </div>
+    <p class="mc-hint" id="mcHint">Press the wax seal to unroll the scroll.</p>
+  </section>
+
+  <section id="nights">
+    <div class="wrap">
+      <h2>Three nights in the dark</h2>
+      <p class="lede">Each evening deepens the story. Choose a night to see what waits for you.</p>
+
+      <div class="tabs" role="tablist" aria-label="Convention days">
+        <button class="tab" role="tab" id="t-thu" aria-controls="p-thu" aria-selected="true"><span class="d">Thursday</span><span class="s">October 28</span></button>
+        <button class="tab" role="tab" id="t-fri" aria-controls="p-fri" aria-selected="false" tabindex="-1"><span class="d">Friday</span><span class="s">October 29</span></button>
+        <button class="tab" role="tab" id="t-sat" aria-controls="p-sat" aria-selected="false" tabindex="-1"><span class="d">Saturday</span><span class="s">October 30</span></button>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-thu" aria-labelledby="t-thu">
+        <ol class="events">
+          <li><time>Evening</time><div><h4>The first gathering: Meet &amp; Greet</h4><p>The doors open for the first time. Meet the authors, narrators and fellow readers who will share your weekend.</p><span class="who">VIP: The Order of the Crescent and The Midnight Royalty</span></div></li>
+          <li><time>Evening</time><div><h4>Voices in the dark</h4><p>Our narrators read short story submissions aloud, giving each tale its first breath before a live audience.</p></div></li>
+          <li><time>Night’s end</time><div><h4>The binding</h4><p>As the night closes, the stories are bound into the very first Moments After Midnight anthology, where stories breathe between the pages.</p></div></li>
+        </ol>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-fri" aria-labelledby="t-fri" hidden>
+        <ol class="events">
+          <li><time>10:00 am</time><div><h4>Signings open</h4><p>First to the tables, first to the ink.</p><span class="who">The Order of the Crescent</span></div></li>
+          <li><time>1:00 pm</time><div><h4>Signings continue</h4><span class="who">The Midnight Royalty joins</span></div></li>
+          <li><time>2:30 pm</time><div><h4>Signings continue</h4><span class="who">The Midnight Coven joins</span></div></li>
+          <li><time>All day</time><div><h4>Panels &amp; Featured Spotlights</h4><p>Spotlights run alongside the signings, each in its own space, while panels gather the crowd. All broadcast live and hosted by your favorite Spotlighters and influencers.</p></div></li>
+          <li><time>6:30–7:30 pm</time><div><h4>Narrator Hour</h4><p>An hour that belongs to the narrators alone. Authors and guests meet the voices that bring our stories to life, and we honor the craft behind every chapter you’ve ever heard.</p></div></li>
+          <li><time>9:00 pm</time><div><h4>The Moonlit Masquerade</h4><p>An immersive experience where the story unfolds before your eyes. Formal attire required.</p></div></li>
+        </ol>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-sat" aria-labelledby="t-sat" hidden>
+        <ol class="events">
+          <li><time>Morning</time><div><h4>Sunrise Mimosa Moment</h4><p>A toast to the dawn, for those who survived the night before.</p><span class="who">VIP: The Order of the Crescent and The Midnight Royalty</span></div></li>
+          <li><time>10:00 am</time><div><h4>Signings open</h4><span class="who">All VIP: The Order of the Crescent and The Midnight Royalty</span></div></li>
+          <li><time>1:00 pm</time><div><h4>Signings continue</h4><span class="who">The Midnight Coven joins</span></div></li>
+          <li><time>All day</time><div><h4>Panels &amp; Spotlights</h4><p>More spotlights during the signings and a full host of panels, broadcast live and recorded.</p></div></li>
+          <li><time>5:00–6:00 pm</time><div><h4>Narrator Hour</h4><p>One last hour with the voices behind the pages.</p></div></li>
+          <li><time>6:00–7:00 pm</time><div><h4>Raffles &amp; game winners</h4><p>The fates are revealed, prizes are claimed, and the convention draws to a close.</p></div></li>
+          <li><time>After dark</time><div><h4>A special evening of unwinding</h4><p>One that will make you blush. More details will be whispered soon.</p></div></li>
+        </ol>
+      </div>
+      <p class="note">Exact times for panels and spotlights will be revealed closer to the convention.</p>
+    </div>
+  </section>
+
+  <section class="spot" id="spotlights">
+    <div class="wrap">
+      <h2>Spotlights</h2>
+      <p class="lede">While the signing tables fill, the lights find their stars. Spotlights run all weekend during the Friday and Saturday signings, each one unfolding in its own separate space.</p>
+      <p class="spot-feature">Every author and every narrator in attendance will have a chance to step into the light, spotlighted by one of our attending influencers.</p>
+      <div class="spot-grid">
+        <div class="spot-card">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="9" width="30" height="24" fill="none" stroke="#c4001c" stroke-width="2"/><path d="M5 15 H35 M12 5 V12 M28 5 V12" stroke="#c4001c" stroke-width="2"/><circle cx="20" cy="24" r="4" fill="#ecdcc8"/></svg>
+          <h3>During the signings</h3>
+          <p>Friday and Saturday, all weekend long, running alongside the signing hours.</p>
+        </div>
+        <div class="spot-card">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 4 L8 36 H32Z" fill="rgba(236,220,200,.25)"/><circle cx="20" cy="6" r="4" fill="#c4001c"/><rect x="12" y="34" width="16" height="3" fill="#ecdcc8"/></svg>
+          <h3>A space of its own</h3>
+          <p>Each spotlight has its own separate space, so every conversation gets the room it deserves.</p>
+        </div>
+        <div class="spot-card">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="14" cy="14" r="6" fill="#c4001c"/><circle cx="27" cy="16" r="5" fill="#ecdcc8"/><path d="M4 34 C4 24 24 24 24 34 M20 34 C20 26 36 26 36 34" fill="none" stroke="#c4001c" stroke-width="2"/></svg>
+          <h3>Authors &amp; narrators</h3>
+          <p>All attending authors and narrators have a chance to be featured by one of our influencers.</p>
+        </div>
+        <div class="spot-card">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="6" fill="#e3102e"/><path d="M10 10 A14 14 0 0 0 10 30 M30 10 A14 14 0 0 1 30 30 M5 5 A21 21 0 0 0 5 35 M35 5 A21 21 0 0 1 35 35" fill="none" stroke="#ecdcc8" stroke-width="2"/></svg>
+          <h3>Live &amp; recorded</h3>
+          <p>Broadcast live all weekend and recorded, so every spotlight lives on as content long after the con.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panels-sec" id="panels">
+    <div class="wrap panels-layout">
+      <div>
+        <span class="live"><i></i>Live all weekend</span>
+        <h2>Panels</h2>
+        <p class="lede">Pull up a chair in the candlelight. Our panels gather authors, narrators and creators for conversations about the stories that keep us up past midnight, hosted by your favorite Spotlighters and influencers.</p>
+        <p>Every panel will be broadcast live all weekend and recorded for later content, so readers near and far can join the conversation and return to it again and again.</p>
+      </div>
+      <ul class="panel-days">
+        <li><b>Friday, October 29</b><span>Panels throughout the day</span></li>
+        <li><b>Saturday, October 30</b><span>A full host of panels</span></li>
+        <li><b>Topics &amp; times</b><span>Revealed closer to the convention</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="masq" id="masquerade">
+    <div class="wrap narrow">
+      <svg class="mask" viewBox="0 0 320 140" aria-hidden="true">
+        <path d="M160 52 C130 18 70 6 18 22 C10 60 30 108 80 118 C120 124 142 100 160 86 C178 100 200 124 240 118 C290 108 310 60 302 22 C250 6 190 18 160 52Z" fill="#1a0004" stroke="#c4001c" stroke-width="3"/>
+        <path d="M58 58 C78 44 108 46 122 66 C104 80 74 80 58 58Z" fill="#000"/>
+        <path d="M262 58 C242 44 212 46 198 66 C216 80 246 80 262 58Z" fill="#000"/>
+        <path d="M160 86 C150 100 152 116 160 132 C168 116 170 100 160 86Z" fill="#c4001c"/>
+        <path d="M18 22 C6 10 0 30 4 44 M302 22 C314 10 320 30 316 44" stroke="#8a0010" stroke-width="2" fill="none"/>
+      </svg>
+      <h2>The Moonlit Masquerade</h2>
+      <p class="lede" style="margin:0 auto">Friday night, the ballroom becomes the final chapter. The story unfolds around you, close enough to touch, and nothing is quite what it seems behind a mask.</p>
+      <div class="facts">
+        <div><b>9:00 pm</b><span>Friday, October 29</span></div>
+        <div><b>Formal</b><span>Attire required</span></div>
+      </div>
+      <p class="warning">Watch closely all weekend. Every glance, every whisper, every stranger may be a clue, because by Friday night, you become part of the story.</p>
+    </div>
+  </section>
+
+  <section id="anthology">
+    <div class="wrap">
+      <div class="anth">
+        <div class="book" aria-hidden="true">
+          <strong>Moments After Midnight</strong>
+          <em>Where stories breathe between the pages</em>
+          <span class="vol">Volume I</span>
+        </div>
+        <div>
+          <h2>Bound by moonlight</h2>
+          <p>On Thursday night, our narrators read the short stories submitted to the convention aloud, one voice at a time. When the last word fades, those stories are bound together into the very first Moments After Midnight anthology.</p>
+          <p>A first edition, born in a single night, carrying every voice that filled the room.</p>
+          <p class="deadline">Submissions must be received by <b>August 15, 2027</b></p>
+        </div>
+      </div>
+
+      <form class="sub-form" id="subForm" novalidate>
+        <h3>Submit your story</h3>
+        <p style="margin:0;color:var(--ash)">Fill in the details below. When you press submit, your email app opens with everything addressed to momentsaftermidnightcon@gmail.com. Attach your story to that email and send it.</p>
+        <div class="grid">
+          <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" autocomplete="name" required></div>
+          <div class="field"><label for="f-pen">Pen name (if different)</label><input id="f-pen" name="pen"></div>
+          <div class="field"><label for="f-email">Email address</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="f-title">Story title</label><input id="f-title" name="title" required></div>
+          <div class="field full"><label for="f-note">A few words about your story</label><textarea id="f-note" name="note" placeholder="A short summary, or anything you'd like us to know"></textarea></div>
+        </div>
+        <div class="form-foot">
+          <button class="btn" type="submit">Submit my story</button>
+          <small>Remember to attach your story before sending. Submissions close August 15, 2027.</small>
+        </div>
+        <p class="form-msg" id="formMsg" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="tickets">
+    <div class="wrap">
+      <h2>Choose your bloodline</h2>
+      <p class="lede">Three tiers for readers. Open each one to see what your invitation unlocks.</p>
+
+      <div class="tiers">
+        <details class="tier crown">
+          <summary>
+            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M30 6 A18 18 0 1 0 30 42 A14 14 0 1 1 30 6Z" fill="#c4001c"/><circle cx="34" cy="16" r="2.5" fill="#ecdcc8"/><circle cx="38" cy="26" r="1.8" fill="#ecdcc8"/></svg>
+            <span><span class="name">The Order of the Crescent</span><span class="rank">VIP All Access</span></span>
+            <span class="cost">$175</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+          </summary>
+          <div class="tier-body">
+            <p class="price"><span class="amt">$175.00</span> per reader. Release date coming soon.</p>
+            <ul>
+              <li>Thursday Meet &amp; Greet and live anthology reading</li>
+              <li>Friday signings at <strong>10:00 am</strong>, first access of all tiers</li>
+              <li>Friday panels, livestreamed Spotlights and Narrator Hour</li>
+              <li>The Moonlit Masquerade, Friday at 9:00 pm</li>
+              <li>Saturday Sunrise Mimosa Moment</li>
+              <li>Saturday signings at <strong>10:00 am</strong></li>
+              <li>Saturday panels, Spotlights, Narrator Hour, raffles and game winners</li>
+              <li class="excl">The Meet &amp; Greet After Party, open only to the Order</li>
+            </ul>
+            <a class="btn" href="mailto:momentsaftermidnightcon@gmail.com?subject=The%20Order%20of%20the%20Crescent%20ticket%20inquiry">Request this invitation</a>
+          </div>
+        </details>
+
+        <details class="tier">
+          <summary>
+            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M6 36 L10 14 L18 24 L24 8 L30 24 L38 14 L42 36Z" fill="#c4001c"/><rect x="6" y="38" width="36" height="4" fill="#ecdcc8"/></svg>
+            <span><span class="name">The Midnight Royalty</span><span class="rank">VIP</span></span>
+            <span class="cost">$150</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+          </summary>
+          <div class="tier-body">
+            <p class="price"><span class="amt">$150.00</span> per reader. Release date coming soon.</p>
+            <ul>
+              <li>Thursday Meet &amp; Greet and live anthology reading</li>
+              <li>Friday signings at <strong>1:00 pm</strong></li>
+              <li>Friday panels, livestreamed Spotlights and Narrator Hour</li>
+              <li>The Moonlit Masquerade, Friday at 9:00 pm</li>
+              <li>Saturday Sunrise Mimosa Moment</li>
+              <li>Saturday signings at <strong>10:00 am</strong></li>
+              <li>Saturday panels, Spotlights, Narrator Hour, raffles and game winners</li>
+            </ul>
+            <a class="btn" href="mailto:momentsaftermidnightcon@gmail.com?subject=The%20Midnight%20Royalty%20ticket%20inquiry">Request this invitation</a>
+          </div>
+        </details>
+
+        <details class="tier">
+          <summary>
+            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4 C24 4 10 22 10 31 a14 14 0 0 0 28 0 C38 22 24 4 24 4Z" fill="#c4001c"/><path d="M17 31 a7 7 0 0 0 7 7" stroke="#ecdcc8" stroke-width="2" fill="none"/></svg>
+            <span><span class="name">The Midnight Coven</span><span class="rank">General admission</span></span>
+            <span class="cost">$75</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+          </summary>
+          <div class="tier-body">
+            <p class="price"><span class="amt">$75.00</span> per reader. Release date coming soon.</p>
+            <ul>
+              <li>Friday signings at <strong>2:30 pm</strong></li>
+              <li>Friday panels, livestreamed Spotlights and Narrator Hour</li>
+              <li>The Moonlit Masquerade, Friday at 9:00 pm</li>
+              <li>Saturday signings at <strong>1:00 pm</strong></li>
+              <li>Saturday panels, Spotlights, Narrator Hour, raffles and game winners</li>
+            </ul>
+            <a class="btn" href="mailto:momentsaftermidnightcon@gmail.com?subject=The%20Midnight%20Coven%20ticket%20inquiry">Request this invitation</a>
+          </div>
+        </details>
+      </div>
+      <p class="note">All attendees must be 18 or older.</p>
+    </div>
+  </section>
+
+  <section id="apply">
+    <div class="wrap">
+      <h2>Join the court</h2>
+      <p class="lede">The night needs more than readers. Open your calling below to apply.</p>
+      <div class="apps">
+        <details class="tier">
+          <summary>
+            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M4 18 C10 6 18 6 24 14 C30 6 38 6 44 18 C40 30 30 32 24 26 C18 32 8 30 4 18Z" fill="#c4001c"/><ellipse cx="14" cy="18" rx="4" ry="2.6" fill="#000"/><ellipse cx="34" cy="18" rx="4" ry="2.6" fill="#000"/></svg>
+            <span><span class="name">Cosplayers &amp; Influencers</span><span class="rank">Wear the story, share the night</span></span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+          </summary>
+          <div class="tier-body">
+            <p>Step out of the chapters and into the crowd, or carry the night to your followers. Cosplayers bring beloved characters to life in the halls, at the signings and beneath the masks of the Moonlit Masquerade, while influencers host spotlights, shine a light on our authors and narrators, and broadcast the convention live to their audiences.</p>
+            <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdAhuxmcF3q5sAwUu1Yt2i_uens95IwJwE4yWrbaovtK2Z5tA/viewform?utm_source=ig&utm_medium=social&utm_content=link_in_bio" target="_blank" rel="noopener">Apply as a cosplayer or influencer</a>
+          </div>
+        </details>
+        <details class="tier">
+          <summary>
+            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6 C28 6 30 10 30 14 L30 16 L18 16 L18 14 C18 10 20 6 24 6Z" fill="none" stroke="#ecdcc8" stroke-width="2"/><path d="M10 16 L38 16 L35 42 L13 42Z" fill="#c4001c"/></svg>
+            <span><span class="name">Vendors</span><span class="rank">Open your stall in the dark</span></span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+          </summary>
+          <div class="tier-body">
+            <p>Bring your wares to a crowd of devoted readers: bookish treasures, gothic finery, candles, art and curiosities fit for the night.</p>
+            <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSeNwWqpURSAUGLY9oZ2TS0auUcIQzRtUELjO3OQBM7a40eHQA/viewform" target="_blank" rel="noopener">Apply as a vendor</a>
+          </div>
+        </details>
+        <details class="tier">
+          <summary>
+            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><rect x="17" y="4" width="14" height="24" rx="7" fill="#c4001c"/><path d="M11 22 C11 30 17 35 24 35 C31 35 37 30 37 22" fill="none" stroke="#ecdcc8" stroke-width="2.5"/><path d="M24 35 L24 43 M16 43 L32 43" stroke="#ecdcc8" stroke-width="2.5"/></svg>
+            <span><span class="name">Narrators</span><span class="rank">Lend the night your voice</span></span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+          </summary>
+          <div class="tier-body">
+            <p>Join Narrator Hour, read the anthology submissions aloud on Thursday night, and meet the authors and listeners who know your voice by heart.</p>
+            <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfK7MqUvnXSVJE6lxxp9ZrAZIkkw6P2YdZVQyFD9u7JiKWOTA/viewform" target="_blank" rel="noopener">Apply as a narrator</a>
+          </div>
+        </details>
+        <details class="tier">
+          <summary>
+            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M38 4 C24 10 16 22 12 40 L16 40 C20 30 26 22 34 16 C30 16 27 17 24 19 C28 13 33 9 38 4Z" fill="#c4001c"/><path d="M8 44 L20 44" stroke="#ecdcc8" stroke-width="2.5"/></svg>
+            <span><span class="name">Authors</span><span class="rank">Take your seat at the table</span></span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+          </summary>
+          <div class="tier-body">
+            <p>Sign for your readers, join the panels and spotlights, and share the weekend with the indie authors shaping vampire fantasy.</p>
+            <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdK78mWFlYusNqTlbD45_lCdLlcT8HRcHdDClHw7laAy9pZKQ/viewform" target="_blank" rel="noopener">Apply as an author</a>
+          </div>
+        </details>
+      </div>
+      <p class="note">Each application opens in a new tab. Questions can be sent to momentsaftermidnightcon@gmail.com.</p>
+    </div>
+  </section>
+
+  <section id="court">
+    <div class="wrap">
+      <h2>Your hosts for the night</h2>
+      <div class="hosts">
+        <div class="host"><h3>Rahe McNabb</h3><p class="handle">@thatlagirl</p><p class="role">Host</p></div>
+        <div class="host"><h3>R.W. McNabb</h3><p class="role">Host</p></div>
+        <div class="host"><h3>C.P. Harrow</h3><p class="role">Author, marketing and advertising collaborator</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap narrow">
+      <h2>Send word by raven</h2>
+      <p>Vendors, authors and attendees who want to join the court can write to us directly.</p>
+      <a class="mail" href="mailto:momentsaftermidnightcon@gmail.com">momentsaftermidnightcon@gmail.com</a>
+      <div class="btns">
+        <a class="btn" href="mailto:momentsaftermidnightcon@gmail.com?subject=Vendor%20inquiry">Vendor inquiry</a>
+        <a class="btn" href="mailto:momentsaftermidnightcon@gmail.com?subject=Author%20inquiry">Author inquiry</a>
+        <a class="btn" href="mailto:momentsaftermidnightcon@gmail.com?subject=Attendee%20inquiry">Attendee inquiry</a>
+      </div>
+    </div>
+  </section>
+  <section class="socials" id="find-us">
+    <div class="wrap">
+      <h2>Find us in the dark</h2>
+      <p class="lede" style="margin:0 auto">Follow along for reveals, sneak peeks and whispers from the court.</p>
+      <div class="social-row">
+        <a class="social" href="https://www.tiktok.com/@momentsaftermidnightcon" target="_blank" rel="noopener">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="none" stroke="#c4001c" stroke-width="2"/><path d="M23 10 V25 a5 5 0 1 1 -5 -5" fill="none" stroke="#ecdcc8" stroke-width="2.5"/><path d="M23 10 C24 14 27 16 30 16" fill="none" stroke="#e3102e" stroke-width="2.5"/></svg>
+          <span><small>TikTok</small><b>@momentsaftermidnightcon</b></span>
+        </a>
+        <a class="social" href="https://www.instagram.com/momentsaftermidnight" target="_blank" rel="noopener">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="none" stroke="#c4001c" stroke-width="2"/><rect x="11" y="13" width="18" height="14" rx="2" fill="none" stroke="#ecdcc8" stroke-width="2.2"/><circle cx="20" cy="20" r="3.5" fill="none" stroke="#e3102e" stroke-width="2.2"/><path d="M14 13 L16 10 H22 L24 13" fill="none" stroke="#ecdcc8" stroke-width="2.2"/></svg>
+          <span><small>Instagram</small><b>@momentsaftermidnight</b></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<aside class="room" aria-label="Hotel room block">
+  <h2>Room Block Available Soon at The Hyatt Regency</h2>
+  <p>Every creature of the night needs a place to lay its head before dawn. Rest just an elevator ride away from every signing, spotlight and the Moonlit Masquerade.</p>
+</aside>
+
+<footer>
+  <p class="big">Moments After Midnight</p>
+  <p>October 28–30, 2027. Hyatt Regency New Orleans, 601 Loyola Avenue, New Orleans, Louisiana.</p>
+  <p>Hosted by Rahe McNabb (@thatlagirl) and R.W. McNabb. Marketing and advertising in collaboration with Author C.P. Harrow.</p>
+  <p>Guests must be 18 or older.</p>
+</footer>
+
+<div class="blood" id="blood" aria-hidden="true"></div>
+
+<script>
+(function(){
+  /* ---- build clock details ---- */
+  var NS="http://www.w3.org/2000/svg";
+  function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);parent.appendChild(e);return e;}
+  var spikes=document.getElementById("spikes"),ticks=document.getElementById("ticks"),nums=document.getElementById("numerals"),rose=document.getElementById("rose");
+  for(var i=0;i<24;i++){
+    var long=i%2===0, len=long?300:282;
+    el("path",{d:"M-9 -258 L0 -"+len+" L9 -258Z",transform:"rotate("+(i*15)+")"},spikes);
+  }
+  for(var t=0;t<60;t++){
+    var major=t%5===0;
+    el("line",{x1:0,y1:-232,x2:0,y2:major?-212:-224,stroke:major?"#c4001c":"#6b1a20","stroke-width":major?4:1.5,transform:"rotate("+(t*6)+")"},ticks);
+  }
+  var roman=["XII","I","II","III","IIII","V","VI","VII","VIII","IX","X","XI"];
+  roman.forEach(function(r,n){
+    var a=n*30*Math.PI/180, rad=180;
+    var tx=el("text",{x:(Math.sin(a)*rad).toFixed(1),y:(-Math.cos(a)*rad).toFixed(1),transform:"rotate("+(n*30)+" "+(Math.sin(a)*rad).toFixed(1)+" "+(-Math.cos(a)*rad).toFixed(1)+")"},nums);
+    tx.textContent=r;
+  });
+  for(var p=0;p<12;p++){
+    el("path",{d:"M0 0 C-22 -40 -22 -90 0 -120 C22 -90 22 -40 0 0Z",transform:"rotate("+(p*30)+")"},rose);
+  }
+  el("circle",{r:40},rose);
+
+  /* ---- MC scroll ---- */
+  var scr=document.getElementById("mcScroll"),seal=document.getElementById("mcSeal"),parch=document.getElementById("mcParchment"),hint=document.getElementById("mcHint");
+  seal.addEventListener("click",function(){
+    var open=scr.classList.toggle("open");
+    seal.setAttribute("aria-expanded",open);parch.setAttribute("aria-hidden",!open);
+    seal.textContent=open?"Roll it up":"Break the seal";
+    hint.textContent=open?"The names are still sealed. Return soon for the unveiling.":"Press the wax seal to unroll the scroll.";
+  });
+
+  /* ---- anthology submission form ---- */
+  var form=document.getElementById("subForm"),msg=document.getElementById("formMsg");
+  form.addEventListener("submit",function(e){
+    e.preventDefault();
+    var f=form.elements, need=[f.name,f.email,f.title], missing=need.filter(function(x){return !x.value.trim();});
+    if(missing.length){msg.textContent="Please fill in your name, email and story title.";missing[0].focus();return;}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.value.trim())){msg.textContent="That email address doesn't look quite right.";f.email.focus();return;}
+    var body="Name: "+f.name.value.trim()+"\nPen name: "+(f.pen.value.trim()||"(same)")+"\nEmail: "+f.email.value.trim()+"\nStory title: "+f.title.value.trim()+"\n\nAbout the story:\n"+(f.note.value.trim()||"(none)")+"\n\n[Please attach your story to this email before sending.]";
+    var url="mailto:momentsaftermidnightcon@gmail.com?subject="+encodeURIComponent("Anthology Submission: "+f.title.value.trim())+"&body="+encodeURIComponent(body);
+    var a=document.createElement("a");a.href=url;a.target="_top";document.body.appendChild(a);a.click();a.remove();
+    msg.textContent="Your email app should now be open. Attach your story and press send. If nothing opened, email your story to momentsaftermidnightcon@gmail.com.";
+  });
+
+  /* ---- countdown ---- */
+  var target=new Date("2027-10-28T00:00:00-05:00").getTime();
+  var d=document.getElementById("cd-d"),h=document.getElementById("cd-h"),m=document.getElementById("cd-m"),s=document.getElementById("cd-s");
+  function pad(n,l){n=String(n);while(n.length<l)n="0"+n;return n;}
+  function tick(){
+    var diff=Math.max(0,target-Date.now());
+    d.textContent=pad(Math.floor(diff/864e5),2);
+    h.textContent=pad(Math.floor(diff/36e5)%24,2);
+    m.textContent=pad(Math.floor(diff/6e4)%60,2);
+    s.textContent=pad(Math.floor(diff/1e3)%60,2);
+  }
+  tick();setInterval(tick,1000);
+
+  /* ---- tabs ---- */
+  var tabs=[].slice.call(document.querySelectorAll(".tab"));
+  function select(tab){
+    tabs.forEach(function(t){
+      var on=t===tab;
+      t.setAttribute("aria-selected",on);t.tabIndex=on?0:-1;
+      document.getElementById(t.getAttribute("aria-controls")).hidden=!on;
+    });
+  }
+  tabs.forEach(function(t,i){
+    t.addEventListener("click",function(){select(t);});
+    t.addEventListener("keydown",function(e){
+      var n=null;
+      if(e.key==="ArrowRight")n=tabs[(i+1)%tabs.length];
+      if(e.key==="ArrowLeft")n=tabs[(i-1+tabs.length)%tabs.length];
+      if(n){e.preventDefault();select(n);n.focus();}
+    });
+  });
+
+  /* ---- blood drops on every click ---- */
+  var layer=document.getElementById("blood");
+  var dropSVG='<svg viewBox="0 0 16 22"><path d="M8 0 C8 0 0 10 0 14.5 a8 7.5 0 0 0 16 0 C16 10 8 0 8 0Z" fill="#c4001c"/><ellipse cx="5" cy="14" rx="1.6" ry="2.6" fill="#ff6b7d" opacity=".55"/></svg>';
+  document.addEventListener("pointerdown",function(e){
+    var x=e.clientX,y=e.clientY;
+    var group=document.createElement("div");
+    group.style.cssText="position:absolute;left:"+x+"px;top:"+y+"px";
+    var stain=document.createElement("div");stain.className="stain";group.appendChild(stain);
+    var count=2+Math.floor(Math.random()*2);
+    for(var i=0;i<count;i++){
+      var dr=document.createElement("div");dr.className="drop";dr.innerHTML=dropSVG;
+      dr.style.left=((Math.random()-.5)*18)+"px";
+      dr.style.animationDelay=(i*0.12)+"s";
+      var sc=.6+Math.random()*.6;dr.style.width=(16*sc)+"px";dr.style.height=(22*sc)+"px";
+      group.appendChild(dr);
+    }
+    for(var j=0;j<7;j++){
+      var sp=document.createElement("div");sp.className="spat";
+      var size=2+Math.random()*5,ang=Math.random()*Math.PI*2,dist=14+Math.random()*30;
+      sp.style.width=sp.style.height=size+"px";
+      sp.style.left=(-size/2)+"px";sp.style.top=(-size/2)+"px";
+      sp.style.setProperty("--dx",(Math.cos(ang)*dist)+"px");
+      sp.style.setProperty("--dy",(Math.sin(ang)*dist+8)+"px");
+      group.appendChild(sp);
+    }
+    layer.appendChild(group);
+    setTimeout(function(){group.remove();},1800);
+  },{passive:true});
+})();
+</script>
+</body>
+</html>
