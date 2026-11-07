@@ -179,7 +179,7 @@ h3{font-family:var(--display);font-weight:400;font-size:2rem;line-height:1.1;mar
 
 
 /* ---------- MC reveal scroll ---------- */
-.mc{padding:5rem 1rem}
+.mc{padding:5rem 1rem;overflow:hidden}
 .mc-stage{max-width:56rem;margin:0 auto;display:grid;grid-template-columns:auto minmax(0,34rem) auto;justify-content:center;align-items:end;gap:clamp(.5rem,4vw,3rem)}
 .mc-head{text-align:center;margin:0 auto 2.5rem;max-width:40rem}
 .mc-head h2{margin-bottom:.5rem}
@@ -280,6 +280,8 @@ h3{font-family:var(--display);font-weight:400;font-size:2rem;line-height:1.1;mar
 .room{position:relative;z-index:1;background:linear-gradient(180deg,#a3000f,#6e000b);border-top:2px solid #ff3348;border-bottom:2px solid #3a0006;text-align:center;padding:2.25rem 1.25rem;box-shadow:inset 0 0 80px rgba(0,0,0,.45)}
 .room h2{font-size:clamp(2rem,6vw,3.2rem);color:#fff3e6;margin:0 0 .5rem;text-shadow:0 2px 0 #3a0006}
 .room p{margin:0 auto;max-width:40rem;font-style:italic;font-size:1.2rem;color:#ffe2da}
+.room-btn{margin-top:1.5rem;font-family:var(--display);font-size:1.6rem;padding:.6rem 2rem;background:#000;border-color:#000;color:#fff3e6}
+.room-btn:hover{background:#1a0004;color:#fff}
 
 /* ---------- Music toggle ---------- */
 .music-btn{position:fixed;right:1rem;bottom:calc(1rem + env(safe-area-inset-bottom,0px));z-index:50;display:flex;align-items:center;gap:.5rem;font-family:var(--body);font-size:1rem;color:var(--bone);background:rgba(0,0,0,.85);border:1px solid var(--crimson);padding:.55rem .9rem;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.6)}
@@ -290,6 +292,52 @@ h3{font-family:var(--display);font-weight:400;font-size:2rem;line-height:1.1;mar
 .music-btn .bars i:nth-child(2){animation-delay:-.4s}.music-btn .bars i:nth-child(3){animation-delay:-.75s}
 @keyframes bar{0%,100%{height:3px}50%{height:14px}}
 .music-btn[hidden]{display:none}
+
+
+/* ticket purchase */
+.ticket-cta{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 1.5rem;margin-top:1.75rem;padding:1.25rem 1.5rem;border:1px solid var(--fresh);background:linear-gradient(90deg,rgba(138,0,16,.45),rgba(0,0,0,.6))}
+.ticket-cta span{font-style:italic;color:var(--bone);flex:1;min-width:14rem}
+.btn-big{font-family:var(--display);font-size:1.6rem;padding:.6rem 2rem;background:var(--crimson);border-color:var(--fresh);box-shadow:0 0 24px rgba(227,16,46,.35)}
+
+
+/* ticket popup */
+.tix-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.82);backdrop-filter:blur(4px)}
+.tix-modal.open{display:flex;animation:tixIn .35s ease}
+@keyframes tixIn{from{opacity:0}to{opacity:1}}
+.tix-box{position:relative;width:min(960px,100%);height:min(88vh,860px);display:flex;flex-direction:column;background:#0a0002;border:2px solid var(--crimson);box-shadow:0 0 60px rgba(196,0,28,.45),0 30px 80px #000}
+.tix-head{display:flex;align-items:center;gap:1rem;padding:.7rem 1rem;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#3a0008,#0a0002)}
+.tix-head h2{font-size:clamp(1.5rem,4.5vw,2rem);margin:0;flex:1;line-height:1.1}
+.tix-head a{font-size:.95rem;color:var(--ash);white-space:nowrap}
+.tix-close{width:40px;height:40px;flex:none;border:1px solid var(--crimson);background:transparent;color:var(--bone);font-size:1.6rem;line-height:1;cursor:pointer}
+.tix-close:hover{background:var(--blood)}
+.tix-frame-wrap{position:relative;flex:1;background:#fff}
+.tix-frame-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.tix-loading{position:absolute;inset:0;display:grid;place-items:center;background:#0a0002;color:var(--ash);font-style:italic;text-align:center;padding:1rem}
+.tix-loading.hide{display:none}
+@media (max-width:600px){.tix-modal{padding:0}.tix-box{height:100%;border-width:0}.tix-head a{display:none}}
+
+
+/* ---------- Founding Fifty banner ---------- */
+.ff{position:relative;padding:4.5rem 1.25rem;background:radial-gradient(ellipse at 50% 0%,rgba(138,0,16,.7),rgba(20,0,4,.92) 55%,rgba(0,0,0,.95));border-top:2px solid var(--crimson);border-bottom:2px solid var(--crimson);text-align:center;overflow:hidden}
+.ff[hidden]{display:none}
+.ff .wrap{max-width:60rem}
+.ff-seal{width:110px;height:110px;margin:0 auto .5rem;display:block;filter:drop-shadow(0 8px 14px rgba(0,0,0,.8))}
+.ff-kicker{margin:0;font-style:italic;font-size:1.3rem;color:var(--bone)}
+.ff h2{font-size:clamp(3rem,10vw,6rem);margin:.2rem 0 .6rem;text-shadow:0 0 30px rgba(196,0,28,.6)}
+.ff h2 span{color:#ff2a44}
+.ff-lede{max-width:40rem;margin:0 auto 1.75rem;font-size:1.25rem}
+.ff-perks{list-style:none;margin:0 0 2rem;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.ff-perks li{border:1px solid var(--crimson);background:rgba(0,0,0,.7);padding:1.1rem .8rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;font-size:1.1rem;line-height:1.3}
+.ff-perks svg{width:48px;height:48px}
+@media (max-width:760px){.ff-perks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ff-count{display:inline-block;margin:0 0 1rem;padding:.35rem 1.1rem;border:1px solid var(--fresh);font-size:1.2rem;color:var(--bone)}
+.ff-count b{font-family:var(--display);font-weight:400;font-size:1.7rem;color:#ff2a44}
+.ff-count[hidden]{display:none}
+.ff-timer{display:flex;justify-content:center;gap:clamp(.75rem,3vw,1.75rem);margin:.25rem 0 1.25rem}
+.ff-timer div{min-width:4rem}
+.ff-timer b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(2.2rem,6vw,3.2rem);line-height:1;color:#ff2a44}
+.ff-timer small{font-style:italic;color:var(--ash);font-size:.95rem}
+.ff-deadline{margin:0 0 1.5rem;font-family:var(--display);font-size:clamp(1.5rem,4.5vw,2.1rem);color:var(--bone)}
 
 /* applications */
 .apps{display:flex;flex-direction:column;gap:1rem;margin-top:2.5rem}
@@ -483,6 +531,7 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
   <nav class="nav" aria-label="Main">
     <a class="brand" href="#top">Moments After Midnight</a>
     <ul>
+      <li><a class="link" id="ffNav" href="#founding-fifty" style="color:#ff2a44">Founding Fifty</a></li>
       <li><a class="link" href="#nights">The nights</a></li>
       <li><a class="link" href="#spotlights">Spotlights</a></li>
       <li><a class="link" href="#panels">Panels</a></li>
@@ -511,11 +560,54 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
       </div>
       <div class="hero-actions">
         <a class="btn" href="#tickets">Choose your bloodline</a>
+        <a class="btn ghost" href="https://momentsaftermidnight.ticketspice.com/moments-after-midnight" target="_blank" rel="noopener">Get tickets</a>
         <a class="btn ghost" href="#nights">See the three nights</a>
       </div>
       <p class="age">Strictly 18+. The clock has already struck twelve.</p>
     </div>
   </section>
+
+  <section class="ff" id="founding-fifty" aria-labelledby="ff-title">
+    <div class="wrap">
+      <svg class="ff-seal" role="img" aria-label="Wax seal marked 50" viewBox="0 0 100 100">
+        <path d="M50 4 C62 6 66 2 74 10 C84 14 86 22 92 30 C98 42 94 50 96 60 C94 72 88 78 82 86 C72 94 62 94 50 96 C38 98 28 92 18 86 C10 78 6 70 4 58 C2 46 8 38 10 28 C16 16 26 10 36 6 C42 4 46 4 50 4Z" fill="#c4001c"/>
+        <circle cx="50" cy="50" r="33" fill="none" stroke="#5a000a" stroke-width="3"/>
+        <text x="50" y="52" text-anchor="middle" dominant-baseline="central" font-family="Pirata One, Georgia, serif" font-size="38" fill="#f3dcc0">50</text>
+      </svg>
+      <p class="ff-kicker">50 seats. 7 nights. One sealed door.</p>
+      <h2 id="ff-title">The Founding <span>Fifty</span></h2>
+      <p class="ff-lede">The first 50 readers to claim a ticket become Founding Members, numbered 1 to 50, and receive an upgraded swag bag:</p>
+      <ul class="ff-perks">
+        <li><svg aria-hidden="true" viewBox="0 0 48 48" fill="none" stroke="#ff2a44" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="9" width="38" height="24" rx="3"/><path d="M5 17h38M5 25h38"/><path d="M9 33v6M15 33v6M21 33v6M27 33v6M33 33v6M39 33v6"/></svg>A Founding Fifty blanket</li>
+        <li><svg aria-hidden="true" viewBox="0 0 48 48" fill="none" stroke="#ff2a44" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22c0-7 8-9 20-5 12-4 20-2 20 5 0 8-6 12-12 12-4 0-6-3-8-3s-4 3-8 3C10 34 4 30 4 22z"/><path d="M11 23c2.5 2.5 6.5 2.5 9 0M28 23c2.5 2.5 6.5 2.5 9 0"/></svg>A Founding Fifty sleep mask</li>
+        <li><svg aria-hidden="true" viewBox="0 0 48 48" fill="none" stroke="#ff2a44" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3l9 13 9-13"/><rect x="11" y="16" width="26" height="29" rx="3"/><path d="M17 27h14M17 33h14M17 39h9"/></svg>A Founding Fifty lanyard badge</li>
+        <li><svg aria-hidden="true" viewBox="0 0 48 48" fill="none" stroke="#ff2a44" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14a5 5 0 0 1 5 5v29a4 4 0 0 0-4-4H5z"/><path d="M43 9H29a5 5 0 0 0-5 5v29a4 4 0 0 1 4-4h15z"/></svg>Your name in our very first anthology</li>
+      </ul>
+      <p class="ff-count" id="ffCount" hidden><b id="ffClaimed">0</b> of 50 seats claimed</p>
+      <p class="ff-deadline">Doors seal Friday the 13th at midnight</p>
+      <div class="ff-timer" aria-label="Time left to join the Founding Fifty">
+        <div><b id="ff-d">0</b><small>days</small></div>
+        <div><b id="ff-h">00</b><small>hours</small></div>
+        <div><b id="ff-m">00</b><small>minutes</small></div>
+        <div><b id="ff-s">00</b><small>heartbeats</small></div>
+      </div>
+      <a class="btn btn-big" href="https://momentsaftermidnight.ticketspice.com/moments-after-midnight" target="_blank" rel="noopener">Claim your seat</a>
+    </div>
+  </section>
+  <script>
+  /* Founding Fifty settings: set FF_CLAIMED to the number of seats sold (for example 12) to show the seat count. Leave it as null to hide the count. */
+  (function(){
+    var FF_CLAIMED = null;
+    var FF_ENDS = new Date("2026-11-14T00:00:00-06:00").getTime();
+    var sec=document.getElementById("founding-fifty");
+    if(Date.now()>=FF_ENDS){sec.hidden=true;var l=document.getElementById("ffNav");if(l)l.parentNode.hidden=true;return;}
+    if(typeof FF_CLAIMED==="number"){document.getElementById("ffClaimed").textContent=FF_CLAIMED;document.getElementById("ffCount").hidden=false;}
+    var d=document.getElementById("ff-d"),h=document.getElementById("ff-h"),m=document.getElementById("ff-m"),s=document.getElementById("ff-s");
+    function p(n){return (n<10?"0":"")+n;}
+    function t(){var x=FF_ENDS-Date.now();if(x<=0){sec.hidden=true;return;}d.textContent=Math.floor(x/864e5);h.textContent=p(Math.floor(x/36e5)%24);m.textContent=p(Math.floor(x/6e4)%60);s.textContent=p(Math.floor(x/1e3)%60);}
+    t();setInterval(t,1000);
+  })();
+  </script>
 
   <section class="intro">
     <div class="wrap narrow">
@@ -705,6 +797,10 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
     <div class="wrap">
       <h2>Choose your bloodline</h2>
       <p class="lede">Three tiers for readers. Open each one to see what your invitation unlocks.</p>
+      <div class="ticket-cta">
+        <a class="btn btn-big" href="https://momentsaftermidnight.ticketspice.com/moments-after-midnight" target="_blank" rel="noopener">Get Tickets</a>
+        <span>Tickets are on sale now. Secure your place before the doors seal.</span>
+      </div>
 
       <div class="tiers">
         <details class="tier crown">
@@ -715,7 +811,7 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
             <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
           </summary>
           <div class="tier-body">
-            <p class="price"><span class="amt">$175.00</span> per reader. Release date coming soon.</p>
+            <p class="price"><span class="amt">$175.00</span> per reader. On sale now.</p>
             <ul>
               <li>Thursday Meet &amp; Greet and live anthology reading</li>
               <li>Friday signings at <strong>10:00 am</strong>, first access of all tiers</li>
@@ -726,7 +822,7 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
               <li>Saturday panels, Spotlights, Narrator Hour, raffles and game winners</li>
               <li class="excl">The Meet &amp; Greet After Party, open only to the Order</li>
             </ul>
-            <a class="btn" href="mailto:momentsaftermidnightcon@gmail.com?subject=The%20Order%20of%20the%20Crescent%20ticket%20inquiry">Request this invitation</a>
+            <a class="btn" href="https://momentsaftermidnight.ticketspice.com/moments-after-midnight" target="_blank" rel="noopener">Get tickets</a>
           </div>
         </details>
 
@@ -738,7 +834,7 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
             <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
           </summary>
           <div class="tier-body">
-            <p class="price"><span class="amt">$150.00</span> per reader. Release date coming soon.</p>
+            <p class="price"><span class="amt">$150.00</span> per reader. On sale now.</p>
             <ul>
               <li>Thursday Meet &amp; Greet and live anthology reading</li>
               <li>Friday signings at <strong>1:00 pm</strong></li>
@@ -748,7 +844,7 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
               <li>Saturday signings at <strong>10:00 am</strong></li>
               <li>Saturday panels, Spotlights, Narrator Hour, raffles and game winners</li>
             </ul>
-            <a class="btn" href="mailto:momentsaftermidnightcon@gmail.com?subject=The%20Midnight%20Royalty%20ticket%20inquiry">Request this invitation</a>
+            <a class="btn" href="https://momentsaftermidnight.ticketspice.com/moments-after-midnight" target="_blank" rel="noopener">Get tickets</a>
           </div>
         </details>
 
@@ -760,7 +856,7 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
             <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
           </summary>
           <div class="tier-body">
-            <p class="price"><span class="amt">$75.00</span> per reader. Release date coming soon.</p>
+            <p class="price"><span class="amt">$75.00</span> per reader. On sale now.</p>
             <ul>
               <li>Friday signings at <strong>2:30 pm</strong></li>
               <li>Friday panels, livestreamed Spotlights and Narrator Hour</li>
@@ -768,7 +864,7 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
               <li>Saturday signings at <strong>1:00 pm</strong></li>
               <li>Saturday panels, Spotlights, Narrator Hour, raffles and game winners</li>
             </ul>
-            <a class="btn" href="mailto:momentsaftermidnightcon@gmail.com?subject=The%20Midnight%20Coven%20ticket%20inquiry">Request this invitation</a>
+            <a class="btn" href="https://momentsaftermidnight.ticketspice.com/moments-after-midnight" target="_blank" rel="noopener">Get tickets</a>
           </div>
         </details>
       </div>
@@ -784,12 +880,12 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
         <details class="tier">
           <summary>
             <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M4 18 C10 6 18 6 24 14 C30 6 38 6 44 18 C40 30 30 32 24 26 C18 32 8 30 4 18Z" fill="#c4001c"/><ellipse cx="14" cy="18" rx="4" ry="2.6" fill="#000"/><ellipse cx="34" cy="18" rx="4" ry="2.6" fill="#000"/></svg>
-            <span><span class="name">Cosplayers</span><span class="rank">Wear the story</span></span>
+            <span><span class="name">Cosplayers &amp; Influencers</span><span class="rank">Wear the story, share the night</span></span>
             <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
           </summary>
           <div class="tier-body">
-            <p>Step out of the chapters and into the crowd. Bring the characters readers love to life in the halls, at the signings and beneath the masks of the Moonlit Masquerade.</p>
-            <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdAhuxmcF3q5sAwUu1Yt2i_uens95IwJwE4yWrbaovtK2Z5tA/viewform?utm_source=ig&utm_medium=social&utm_content=link_in_bio" target="_blank" rel="noopener">Apply as a cosplayer</a>
+            <p>Step out of the chapters and into the crowd, or carry the night to your followers. Cosplayers bring beloved characters to life in the halls, at the signings and beneath the masks of the Moonlit Masquerade, while influencers host spotlights, shine a light on our authors and narrators, and broadcast the convention live to their audiences.</p>
+            <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdAhuxmcF3q5sAwUu1Yt2i_uens95IwJwE4yWrbaovtK2Z5tA/viewform?utm_source=ig&utm_medium=social&utm_content=link_in_bio" target="_blank" rel="noopener">Apply as a cosplayer or influencer</a>
           </div>
         </details>
         <details class="tier">
@@ -823,17 +919,6 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
           <div class="tier-body">
             <p>Sign for your readers, join the panels and spotlights, and share the weekend with the indie authors shaping vampire fantasy.</p>
             <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdK78mWFlYusNqTlbD45_lCdLlcT8HRcHdDClHw7laAy9pZKQ/viewform" target="_blank" rel="noopener">Apply as an author</a>
-          </div>
-        </details>
-        <details class="tier">
-          <summary>
-            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6 L10 42 H38Z" fill="rgba(236,220,200,.3)"/><circle cx="24" cy="9" r="6" fill="#c4001c"/><path d="M14 30 L17 33 L24 26 L31 33 L34 30" fill="none" stroke="#ecdcc8" stroke-width="2"/></svg>
-            <span><span class="name">Influencers &amp; Spotlighters</span><span class="rank">Shine the light</span></span>
-            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
-          </summary>
-          <div class="tier-body">
-            <p>Host spotlights during the Friday and Saturday signings, shine your light on the authors and narrators of the weekend, and carry the convention live to your audience.</p>
-            <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfByhdlsGCPIxfLJcZiShgh2k3S4ctv7LX2QcTyyZzX2b2rng/viewform?usp=publish-editor" target="_blank" rel="noopener">Apply as an influencer or spotlighter</a>
           </div>
         </details>
       </div>
@@ -883,8 +968,9 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
 </main>
 
 <aside class="room" aria-label="Hotel room block">
-  <h2>Room Block Available Soon at The Hyatt Regency</h2>
+  <h2>Room Block Now Open at The Hyatt Regency</h2>
   <p>Every creature of the night needs a place to lay its head before dawn. Rest just an elevator ride away from every signing, spotlight and the Moonlit Masquerade.</p>
+  <a class="btn room-btn" href="https://www.hyatt.com/events/en-US/group-booking/MSYRN/G-MAM1" target="_blank" rel="noopener">Book your room</a>
 </aside>
 
 <footer>
@@ -893,6 +979,20 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
   <p>Hosted by Rahe McNabb (@thatlagirl) and R.W. McNabb. Marketing and advertising in collaboration with Author C.P. Harrow.</p>
   <p>Guests must be 18 or older.</p>
 </footer>
+
+<div class="tix-modal" id="tixModal" role="dialog" aria-modal="true" aria-labelledby="tixTitle" aria-hidden="true">
+  <div class="tix-box">
+    <div class="tix-head">
+      <h2 id="tixTitle">Claim your invitation</h2>
+      <a id="tixNewWin" href="https://momentsaftermidnight.ticketspice.com/moments-after-midnight" target="_blank" rel="noopener">Open in a new window</a>
+      <button class="tix-close" id="tixClose" aria-label="Close ticket window">&times;</button>
+    </div>
+    <div class="tix-frame-wrap">
+      <div class="tix-loading" id="tixLoading">Unsealing the ticket office&hellip;<br>If it doesn't appear, use “Open in a new window” above.</div>
+      <iframe id="tixFrame" title="Moments After Midnight tickets" allow="payment"></iframe>
+    </div>
+  </div>
+</div>
 
 <div class="blood" id="blood" aria-hidden="true"></div>
 
@@ -942,6 +1042,30 @@ footer .big{font-family:var(--display);font-size:1.8rem;color:var(--bone)}
     var a=document.createElement("a");a.href=url;a.target="_top";document.body.appendChild(a);a.click();a.remove();
     msg.textContent="Your email app should now be open. Attach your story and press send. If nothing opened, email your story to momentsaftermidnightcon@gmail.com.";
   });
+
+  /* ---- ticket popup ---- */
+  var tixModal=document.getElementById("tixModal"),tixFrame=document.getElementById("tixFrame"),tixLoad=document.getElementById("tixLoading"),tixClose=document.getElementById("tixClose"),tixNew=document.getElementById("tixNewWin"),lastFocus=null;
+  tixFrame.addEventListener("load",function(){ if(tixFrame.src) tixLoad.classList.add("hide"); });
+  function openTix(url){
+    lastFocus=document.activeElement;
+    tixNew.href=url;
+    if(tixFrame.getAttribute("src")!==url){tixLoad.classList.remove("hide");tixFrame.src=url;}
+    tixModal.classList.add("open");tixModal.setAttribute("aria-hidden","false");
+    document.body.style.overflow="hidden";tixClose.focus();
+  }
+  function closeTix(){
+    tixModal.classList.remove("open");tixModal.setAttribute("aria-hidden","true");
+    document.body.style.overflow="";if(lastFocus)lastFocus.focus();
+  }
+  document.addEventListener("click",function(e){
+    var a=e.target.closest&&e.target.closest('a[href*="ticketspice.com"]');
+    if(!a||a.id==="tixNewWin")return;
+    if(e.metaKey||e.ctrlKey||e.shiftKey)return;
+    e.preventDefault();openTix(a.href);
+  });
+  tixClose.addEventListener("click",closeTix);
+  tixModal.addEventListener("click",function(e){if(e.target===tixModal)closeTix();});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&tixModal.classList.contains("open"))closeTix();});
 
   /* ---- countdown ---- */
   var target=new Date("2027-10-28T00:00:00-05:00").getTime();
